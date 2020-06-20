@@ -1,45 +1,43 @@
 {
-  "name": "styled-media-query",
-  "version": "2.1.1",
-  "description": "Beautiful media queries for styled-component",
-  "main": "dist/styled-media-query.common.js",
-  "module": "dist/styled-media-query.es.js",
-  "jsnext:main": "dist/styled-media-query.es.js",
-  "types": "./src/index.d.ts",
+  "name": "styled-media-query2",
+  "version": "1.0.0",
+  "description": "Beautiful media queries for styled-component (version 2)",
+  "main": "dist/index.cjs.js",
+  "browser": "dist/index.umd.js",
+  "module": "dist/index.es.js",
+  "jsnext:main": "dist/index.es.js",
+  "types": "dist/styled-media-query.d.ts",
   "repository": "git@github.com:morajabi/styled-media-query.git",
   "keywords": [
-    "styled-components",
+    "breakpoint",
+    "emotion",
     "media-query",
     "media",
-    "breakpoint"
+    "styled-components",
+    "styled-components",
+    "styled-components2",
+    "utils"
   ],
-  "scripts": {
-    "test": "jest",
-    "clean": "rimraf dist",
-    "build": "yarn build:common && yarn build:es && yarn build:browser",
-    "build:common": "rollup -c --environment COMMON,PRODUCTION",
-    "build:es": "rollup -c --environment ES",
-    "build:browser": "rollup -c --environment BROWSER,PRODUCTION"
-  },
   "files": [
     "dist",
-    "src"
+    "README"
   ],
-  "author": "Mohammad Rajabifard <mo.rajbi@gmail.com>",
   "license": "MIT",
-  "peerDependencies": {
-    "styled-components": ">= 1"
+  "scripts": {
+    "test": "jest",
+    "prebuild": "rimraf dist",
+    "build": "rollup -c"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.6",
-    "@babel/preset-env": "^7.1.6",
-    "rimraf": "^2.6.2",
-    "rollup": "^0.67.3",
-    "rollup-plugin-babel": "^4.0.3",
-    "rollup-plugin-commonjs": "^9.2.0",
-    "rollup-plugin-node-resolve": "^3.4.0",
-    "rollup-plugin-uglify": "^6.0.0",
-    "styled-components": "^4.1.1"
-  },
-  "browserslist": "> 0.25%, not dead"
+    "@babel/core": "7.10.3",
+    "@babel/preset-env": "7.10.3",
+    "@rollup/plugin-babel": "5.0.3",
+    "@rollup/plugin-commonjs": "13.0.0",
+    "@rollup/plugin-node-resolve": "8.0.1",
+    "core-js": "3.6.5",
+    "rimraf": "3.0.2",
+    "rollup": "2.17.1",
+    "rollup-plugin-node-polyfills": "0.2.1",
+    "styled-components": "5.1.1"
+  }
 }

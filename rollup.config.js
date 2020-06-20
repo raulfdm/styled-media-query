@@ -1,72 +1,59 @@
-import resolve from 'rollup-plugin-node-resolve';
-import babel from 'rollup-plugin-babel';
-import commonjs from 'rollup-plugin-commonjs';
-import { uglify } from 'rollup-plugin-uglify';
+import resolve from "@rollup/plugin-node-resolve";
+import babel from "@rollup/plugin-babel";
+import commonjs from "@rollup/plugin-commonjs";
+import nodePolyfills from "rollup-plugin-node-polyfills";
 
-const prod = process.env.PRODUCTION;
+import pkgJson from "./package.json";
 
-let config = {
-  input: 'src/index.js',
-  output: {
-    sourcemap: true,
-    exports: 'named'
-  },
-  external: ['react', 'styled-components'],
+const baseConfig = {
+  input: "src/index.js",
+  external: ["styled-components"],
 };
 
-let plugins = [
-  resolve(),
-  commonjs(),
-  babel(),
-];
-
-const globals = {
-  'styled-components': 'styledComponents',
-  react: 'React',
-  'react-dom': 'ReactDOM',
-};
-
-if (prod) plugins.push(uglify());
-
-if (process.env.BROWSER) {
-  config = Object.assign(config, {
+export default [
+  {
+    ...baseConfig,
     output: {
-      file: 'dist/styled-media-query.umd.js',
-      format: 'umd',
-      name: 'styled-media-query',
+      name: pkgJson.name,
+      file: pkgJson.browser,
+      format: "umd",
       sourcemap: true,
-      exports: 'named',
-      globals,
+      exports: "named",
+      globals: {
+        "styled-components": "styledComponents",
+        react: "React",
+        "react-dom": "ReactDOM",
+      },
     },
-    plugins,
-  })
-
-} else if (process.env.COMMON) {
-  config = Object.assign(config, {
     plugins: [
       resolve(),
       commonjs(),
-      babel(),
+      babel({
+        babelHelpers: "bundled",
+      }),
+      nodePolyfills(),
     ],
-    output: {
-      file: 'dist/styled-media-query.common.js',
-      format: 'cjs',
-      exports: 'named',
-    }
-  })
+  },
+  {
+    ...baseConfig,
+    output: [
+      {
+        file: pkgJson.module,
+        format: "es",
+        sourcemap: true,
+      },
+      {
+        file: pkgJson.main,
+        format: "cjs",
+        sourcemap: true,
+        exports: "named",
+      },
+    ],
 
-} else if (process.env.ES) {
-  config = Object.assign(config, {
     plugins: [
-      resolve(),
-      commonjs(),
-      babel(),
+      babel({
+        babelHelpers: "bundled",
+      }),
     ],
-    output: {
-      file: 'dist/styled-media-query.es.js',
-      format: 'es',
-    },
-  })
-}
-
-export default config;
+  },
+];
