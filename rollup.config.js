@@ -6,15 +6,17 @@ import nodePolyfills from "rollup-plugin-node-polyfills";
 import pkgJson from "./package.json";
 
 const baseConfig = {
-  input: "src/index.js",
+  input: "src/index.ts",
   external: ["styled-components"],
 };
+
+const extensions = [".js", ".jsx", ".ts", ".tsx"];
 
 export default [
   {
     ...baseConfig,
     output: {
-      name: pkgJson.name,
+      name: "StyledMediaQuery2",
       file: pkgJson.browser,
       format: "umd",
       sourcemap: true,
@@ -26,9 +28,12 @@ export default [
       },
     },
     plugins: [
-      resolve(),
+      resolve({ extensions }),
+
       commonjs(),
+
       babel({
+        extensions,
         babelHelpers: "bundled",
       }),
       nodePolyfills(),
@@ -51,7 +56,12 @@ export default [
     ],
 
     plugins: [
+      resolve({ extensions }),
+
+      commonjs(),
+
       babel({
+        extensions,
         babelHelpers: "bundled",
       }),
     ],
