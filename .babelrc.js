@@ -13,4 +13,19 @@ module.exports = {
     "@babel/plugin-proposal-class-properties",
     "@babel/plugin-proposal-object-rest-spread",
   ],
+  env: {
+    test: {
+      presets: [
+        [
+          "@babel/preset-env",
+          {
+            targets: {
+              node: "current",
+            },
+          },
+          "@babel/preset-typescript",
+        ],
+      ],
+    },
+  },
 };
