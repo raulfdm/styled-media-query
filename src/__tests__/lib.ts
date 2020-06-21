@@ -1,4 +1,4 @@
-import { getSizeFromBreakpoint } from "../index";
+import { getSizeFromBreakpoint, generateMedia } from "../index";
 
 describe("fn: getSizeFromBreakpoint", () => {
   it("returns breakpoint size", () => {
@@ -18,5 +18,33 @@ describe("fn: getSizeFromBreakpoint", () => {
     expect(mockErrorConsole.mock.calls[0][0]).toMatchInlineSnapshot(
       `"styled-media-query: No valid breakpoint or size specified for media."`
     );
+  });
+});
+
+describe("fn: generateMedia", () => {
+  describe("factory", () => {
+    const media = generateMedia();
+
+    it("", () => {
+      expect(media.lessThan("huge")`
+        border: 1px solid;
+        color: red;
+        &:not(:first-child){
+          font-size: 16px
+        }
+      `).toMatchInlineSnapshot(`
+        "
+              @media (max-width: 1440px) {
+                
+                border: 1px solid;
+                color: red;
+                &:not(:first-child){
+                  font-size: 16px
+                }
+              
+              }
+              "
+      `);
+    });
   });
 });

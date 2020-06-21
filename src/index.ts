@@ -1,4 +1,10 @@
-import { css } from "styled-components";
+import {
+  css,
+  FlattenInterpolation,
+  ThemedStyledProps,
+  InterpolationValue,
+  InterpolationFunction,
+} from "styled-components";
 import { HashBreakPoint } from "./types";
 
 export const defaultBreakpoints = {
@@ -8,86 +14,110 @@ export const defaultBreakpoints = {
   small: "450px",
 };
 
-export function getSizeFromBreakpoint(
-  breakpointValue: string,
-  breakpoints: HashBreakPoint = {}
-) {
-  if (breakpoints[breakpointValue]) {
-    return breakpoints[breakpointValue];
-  } else if (parseInt(breakpointValue)) {
-    return breakpointValue;
-  } else {
-    console.error(
-      "styled-media-query: No valid breakpoint or size specified for media."
-    );
-    return "0";
-  }
+type DefaultBreakpoints = typeof defaultBreakpoints;
+
+interface Hash {
+  [name: string]: string;
 }
 
-// export function generateMedia(breakpoints = defaultBreakpoints) {
-//   const lessThan = (breakpoint) => (...args) => css`
-//     @media (max-width: ${getSizeFromBreakpoint(breakpoint, breakpoints)}) {
-//       ${css(...args)}
-//     }
-//   `;
+type StyledComponentsCSSType = Parameters<typeof css>;
 
-//   const greaterThan = (breakpoint) => (...args) => css`
-//     @media (min-width: ${getSizeFromBreakpoint(breakpoint, breakpoints)}) {
-//       ${css(...args)}
-//     }
-//   `;
+export function getSizeFromBreakpoint(
+  breakpointValue: string,
+  breakpoints = {} as Hash
+): string {
+  if (breakpoints[breakpointValue]) {
+    return breakpoints[breakpointValue];
+  }
 
-//   const between = (firstBreakpoint, secondBreakpoint) => (...args) => css`
-//     @media (min-width: ${getSizeFromBreakpoint(
-//         firstBreakpoint,
-//         breakpoints
-//       )}) and (max-width: ${getSizeFromBreakpoint(
-//         secondBreakpoint,
-//         breakpoints
-//       )}) {
-//       ${css(...args)}
-//     }
-//   `;
+  if (parseInt(breakpointValue)) {
+    return breakpointValue;
+  }
 
-//   const oldStyle = Object.keys(breakpoints).reduce(
-//     (acc, label) => {
-//       const size = breakpoints[label];
+  console.error(
+    "styled-media-query: No valid breakpoint or size specified for media."
+  );
 
-//       acc.to[label] = (...args) => {
-//         console.warn(
-//           `styled-media-query: Use media.lessThan('${label}') instead of old media.to.${label} (Probably we'll deprecate it)`
-//         );
-//         return css`
-//           @media (max-width: ${size}) {
-//             ${css(...args)}
-//           }
-//         `;
-//       };
+  return "0";
+}
 
-//       acc.from[label] = (...args) => {
-//         console.warn(
-//           `styled-media-query: Use media.greaterThan('${label}') instead of old media.from.${label} (Probably we'll deprecate it)`
-//         );
-//         return css`
-//           @media (min-width: ${size}) {
-//             ${css(...args)}
-//           }
-//         `;
-//       };
+export function generateMedia(breakpoints = defaultBreakpoints) {
+  function lessThan(
+    breakpoint: keyof typeof breakpoints | string
+  ): (...args: TemplateStringsArray[]) => string;
+  function lessThan(breakpoint: string) {
+    return (...args: TemplateStringsArray[]) => {
+      return `
+      @media (max-width: ${getSizeFromBreakpoint(breakpoint, breakpoints)}) {
+        ${args}
+      }
+      `;
+    };
+  }
 
-//       return acc;
-//     },
-//     { to: {}, from: {} }
-//   );
+  // const greaterThan = (breakpoint) => (...args) => css`
+  //   @media (min-width: ${getSizeFromBreakpoint(breakpoint, breakpoints)}) {
+  //     ${css(...args)}
+  //   }
+  // `;
 
-//   return Object.assign(
-//     {
-//       lessThan,
-//       greaterThan,
-//       between,
-//     },
-//     oldStyle
-//   );
-// }
+  // const between = (firstBreakpoint, secondBreakpoint) => (...args) => css`
+  //   @media (min-width: ${getSizeFromBreakpoint(
+  //       firstBreakpoint,
+  //       breakpoints
+  //     )}) and (max-width: ${getSizeFromBreakpoint(
+  //       secondBreakpoint,
+  //       breakpoints
+  //     )}) {
+  //     ${css(...args)}
+  //   }
+  // `;
 
+  // const oldStyle = Object.keys(breakpoints).reduce(
+  //   (acc, label) => {
+  //     const size = breakpoints[label];
+
+  //     acc.to[label] = (...args) => {
+  //       console.warn(
+  //         `styled-media-query: Use media.lessThan('${label}') instead of old media.to.${label} (Probably we'll deprecate it)`
+  //       );
+  //       return css`
+  //         @media (max-width: ${size}) {
+  //           ${css(...args)}
+  //         }
+  //       `;
+  //     };
+
+  //     acc.from[label] = (...args) => {
+  //       console.warn(
+  //         `styled-media-query: Use media.greaterThan('${label}') instead of old media.from.${label} (Probably we'll deprecate it)`
+  //       );
+  //       return css`
+  //         @media (min-width: ${size}) {
+  //           ${css(...args)}
+  //         }
+  //       `;
+  //     };
+
+  //     return acc;
+  //   },
+  //   { to: {}, from: {} }
+  // );
+
+  return {
+    lessThan,
+    // greaterThan,
+    // between,
+  };
+  // oldStyle
+}
+
+const abnc = generateMedia();
+
+abnc.lessThan("huge");
+abnc.lessThan("100px");
 // export default generateMedia();
+
+function lessThan() {
+  retur;
+}

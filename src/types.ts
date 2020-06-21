@@ -5,4 +5,8 @@ export interface DefaultBreakpoints {
   small: string;
 }
 
-export type HashBreakPoint = Record<string, string>;
+// export type HashBreakPoint = Record<string, string>;
+
+export type HashBreakPoint<T> = {
+  readonly [P in keyof T]: T[P];
+};
