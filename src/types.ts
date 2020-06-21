@@ -4,3 +4,5 @@ export interface DefaultBreakpoints {
   medium: string;
   small: string;
 }
+
+export type HashBreakPoint = Record<string, string>;
